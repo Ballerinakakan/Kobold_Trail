@@ -131,7 +131,7 @@ public class Kobold
 
     private void death(String reason){
 	dead = true;
-	System.out.print("\n" + name + " has tragically passed away from " + reason + " :<");
+	//System.out.print("\n" + name + " has tragically passed away from " + reason + " :<");
 	//print death :<
     }
 
@@ -200,6 +200,10 @@ public class Kobold
 	}
 	return 0;
     }
+
+	public String getColor(){
+		return color;
+	}
 
     public Equipment getEquips(String slot){
 	return equipedItems.get(slot);
