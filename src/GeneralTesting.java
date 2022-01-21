@@ -50,22 +50,25 @@ public class GeneralTesting
 
 
 
-	for (int k = 0; k < 100; k++) {
+	for (int k = 0; k < 10; k++) {
 		koboldMap.put(0, raxis);
 		koboldMap.put(1, new Kobold("Ringo", 12, 8, 12, 8, 12, 8, true, Aspects.RED, Aspects.BROWN));
 		koboldMap.put(2, new Kobold("Lulin", 12, 8, 12, 8, 12, 8, true, Aspects.GREEN, Aspects.BROWN));
-		koboldMap.put(3, new Kobold("Joyli", 12, 8, 12, 8, 12, 8, false, Aspects.BLACK, Aspects.BROWN));
-		koboldMap.put(4, new Kobold("Dronald", 10, 10, 10, 10, 10, 10, false, Aspects.WHITE, Aspects.BROWN));
-		//koboldMap.put(5, new Kobold("Zap", 10, 10, 10, 10, 10, 10, false, Aspects.YELLOW, Aspects.BROWN));
-		//koboldMap.put(6, new Kobold("Jill", 10, 10, 10, 10, 10, 10, false, Aspects.RED, Aspects.BLACK));
+		koboldMap.put(3, new Kobold("Joyli", 12, 8, 12, 8, 12, 8, true, Aspects.BLACK, Aspects.BROWN));
+		koboldMap.put(4, new Kobold("Dronald", 10, 10, 10, 10, 10, 10, true, Aspects.WHITE, Aspects.BROWN));
+		koboldMap.put(5, new Kobold("Zap", 10, 10, 10, 10, 10, 10, false, Aspects.YELLOW, Aspects.BROWN));
+		koboldMap.put(6, new Kobold("Jill", 10, 10, 10, 10, 10, 10, false, Aspects.RED, Aspects.BROWN));
+		koboldMap.put(7, new Kobold("Breen", 10, 10, 10, 10, 10, 10, false, Aspects.WHITE, Aspects.BROWN));
+		koboldMap.put(8, new Kobold("Taco", 10, 10, 10, 10, 10, 10, false, Aspects.BLACK, Aspects.BROWN));
+		koboldMap.put(9, new Kobold("Amogus", 10, 10, 10, 10, 10, 10, false, Aspects.GREEN, Aspects.BROWN));
 
-		int kobID = 5;
-		for (int i = 0; i < 10; i++) {
-			koboldMap.put(kobID, koboldMaker.spawnKobold(koboldMap.get(rng.nextInt(koboldMap.size())),koboldMap.get(rng.nextInt(koboldMap.size()))));
-			kobID++;
-		}
+		int kobID = 10;
+		//for (int i = 0; i < 10; i++) {
+			//koboldMap.put(kobID, koboldMaker.spawnKobold(koboldMap.get(rng.nextInt(koboldMap.size())),koboldMap.get(rng.nextInt(koboldMap.size()))));
+			//kobID++;
+		//}
 
-		for (int i = 0; i < 30; i++) {
+		for (int i = 0; i < 90; i++) {
 			month++;
 			if (month == 8) {
 				year++;
@@ -80,7 +83,7 @@ public class GeneralTesting
 					koboldGraveyard.put(kob.getKey(), kob.getValue());
 					continue;
 				}
-				if (rng.nextInt(100) <= 10) {
+				if (rng.nextInt(100) <= 15) {
 					Kobold partner1 = kob.getValue();
 					Kobold partner2;
 					while (true) {
@@ -89,11 +92,15 @@ public class GeneralTesting
 							break;
 						}
 					}
+
 					if (partner1.getFertile() && partner2.getFertile()) {
-						koboldEggs.put(kobID, koboldMaker.spawnKobold(partner1, partner2));
-						kobID++;
-						//System.out.print(
-								//"\nA new kobold has been born! It's name shall be " + koboldEggs.get(kobID - 1).getName() + "!");
+						int numberOfEggs = (rng.nextInt(9) + 1)/3;
+						for (int j = 0; j < numberOfEggs; j++) {
+							koboldEggs.put(kobID, koboldMaker.spawnKobold(partner1, partner2));
+							kobID++;
+							//System.out.print(
+							//"\nA new kobold has been born! It's name shall be " + koboldEggs.get(kobID - 1).getName() + "!");
+						}
 					}
 				}
 			}
@@ -113,33 +120,42 @@ public class GeneralTesting
 
 		//System.out.print (koboldMap.toString());
 
+		int tot = 0;
 		for (Map.Entry<Integer, Kobold> kob : koboldMap.entrySet()) {
 			Kobold cur = kob.getValue();
 			switch (cur.getColor()) {
 				case ":GREEN_SQUARE:":
 				case ":GREEN_CIRCLE:":
 					colorCounter.put("green", colorCounter.get("green") + 1);
+					break;
 				case ":RED_SQUARE:":
 				case ":RED_CIRCLE:":
 					colorCounter.put("red", colorCounter.get("red") + 1);
+					break;
 				case ":BLUE_SQUARE:":
 				case ":BLUE_CIRCLE:":
 					colorCounter.put("blue", colorCounter.get("blue") + 1);
+					break;
 				case ":YELLOW_SQUARE:":
 				case ":YELLOW_CIRCLE:":
 					colorCounter.put("yellow", colorCounter.get("yellow") + 1);
+					break;
 				case ":WHITE_SQUARE:":
 				case ":WHITE_CIRCLE:":
 					colorCounter.put("white", colorCounter.get("white") + 1);
+					break;
 				case ":BLACK_SQUARE:":
 				case ":BLACK_CIRCLE:":
 					colorCounter.put("black", colorCounter.get("black") + 1);
+					break;
 				case ":BROWN_SQUARE:":
 				case ":BROWN_CIRCLE:":
 					colorCounter.put("brown", colorCounter.get("brown") + 1);
+					break;
 			}
+			tot += 1;
 		}
-		System.out.print("\n" + colorCounter.toString());
+		System.out.print("\n" + colorCounter.toString() + " tot: " + tot);
 		koboldMap.clear();
 	}
 

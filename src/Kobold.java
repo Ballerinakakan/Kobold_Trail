@@ -3,27 +3,23 @@ import java.util.Map;
 import java.util.Random;
 
 
-public class Kobold
-{
+public class Kobold extends Creature {
     private Kobold mother, father;
-    private String name;
-    private int ageMonth=0, ageYear=0, strength, dexterity, constitution, intelligence, faith, charisma, health, morale, mana=0, inventorySize, total, luck=1, breedingCooldown = 7;
+    private int ageMonth=0, ageYear=0, inventorySize, luck=1, breedingCooldown = 7;
     private double joy=0, power=0, peace=0, hunger=0, oldAgeRisk;
     private Random rng = new Random();
     private String color;
-    private boolean male, wounded=false, poisoned=false, dead=false, fertile=false;
-    private Aspects majorAspect, minorAspect;
+    private boolean male, fertile=false;
     private Map<Skills, Integer> skillMap = new HashMap<>();
     private Map<Skills, Integer> skillExpMap = new HashMap<>();
     private Map<String, Integer> statExpMap = new HashMap<>();
     private Map<Resources, Integer> inventory = new HashMap<>();
-    private Map<String, Equipment> equipedItems = new HashMap<>();
     {
-	equipedItems.put("RHand", null);
-	equipedItems.put("LHand", null);
-	equipedItems.put("Back", null);
-	equipedItems.put("Body", null);
-	equipedItems.put("Head", null);
+	equippedItems.put("RHand", null);
+	equippedItems.put("LHand", null);
+	equippedItems.put("Back", null);
+	equippedItems.put("Body", null);
+	equippedItems.put("Head", null);
     }
 
 
@@ -110,7 +106,7 @@ public class Kobold
 	for (Map.Entry<Resources, Integer> resource : inventory.entrySet()) {
 	    usedSpace += resource.getValue();
 	}
-	for (Map.Entry<String, Equipment> equipment : equipedItems.entrySet()) {
+	for (Map.Entry<String, Equipment> equipment : equippedItems.entrySet()) {
 	    if(equipment.getValue() != null){
 		usedSpace++;
 	    }
@@ -176,18 +172,10 @@ public class Kobold
 		charisma += 1;
 		break;
 	}
-	updateTotal();
 	//Post stat increase in chat!
     }
 
-    private void updateTotal(){
-	total = strength + dexterity + constitution + intelligence + faith + charisma;
-    }
 
-    public int getTotal() {
-	updateTotal();
-	return total;
-    }
     public int getStat(char s){
 	switch (s){
 	    case 's': return strength;
@@ -206,36 +194,36 @@ public class Kobold
 	}
 
     public Equipment getEquips(String slot){
-	return equipedItems.get(slot);
+	return equippedItems.get(slot);
     }
 
     public boolean equip(Equipment equip){
 	switch (equip.getType()){
 	    case HELMET:
 		if(getEquips("Head") == null){
-		    equipedItems.put("Head", equip);
+		    equippedItems.put("Head", equip);
 		    return true;
 		}
 		break;
 	    case ARMOUR:
 		if(getEquips("Body") == null){
-		    equipedItems.put("Body", equip);
+		    equippedItems.put("Body", equip);
 		    return true;
 		}
 		break;
 	    case BACKPACK:
 		if(getEquips("Back") == null){
-		    equipedItems.put("Back", equip);
+		    equippedItems.put("Back", equip);
 		    return true;
 		}
 		break;
 	    default:
 		if(getEquips("RHand") == null){
-		    equipedItems.put("RHand", equip);
+		    equippedItems.put("RHand", equip);
 		    return true;
 		}
 		else if(getEquips("LHand") == null){
-		    equipedItems.put("LHand", equip);
+		    equippedItems.put("LHand", equip);
 		    return true;
 		}
 	}
@@ -272,11 +260,10 @@ public class Kobold
     public Aspects[] getAspects(){return new Aspects[] {majorAspect, minorAspect};}
     public void setFertile(){
 	fertile = false;
-	breedingCooldown = 5;
+	breedingCooldown = 3;
     }
 
     @Override public String toString() {
-	updateTotal();
 	return "\n ---------------" + name + "---------------\n color: " + color + "\n Aspecs: "+ majorAspect.toString() + " " + minorAspect + "\n age: " + ageYear + " years and " + ageMonth + " months \n str: " + strength + "\n dex: " + dexterity + "\n con: " +
 	       constitution + "\n int: " + intelligence + "\n fai: " + faith + "\n cha: " + charisma + "\n Luck: " + luck + "\n health=" +
 	       health + ", morale=" + morale + ", mana=" + mana + "\n inventorySize=" + inventorySize +
@@ -286,63 +273,66 @@ public class Kobold
     }
 
     public Kobold(String name, int str, int dex, int con, int intel, int fai, int cha, boolean sex, Aspects major, Aspects minor){
-	this.name = name;
-	this.male = sex;
-	this.strength = str;
-	this.dexterity = dex;
-	this.constitution = con;
-	this.intelligence = intel;
-	this.faith = fai;
-	this.charisma = cha;
-	majorAspect = major;
-	minorAspect = minor;
-	if(minorAspect != Aspects.BROWN){
-	    if(sex){
-		color = ":BLUE_SQUARE:";
-	    }
-	    else{
-		color = ":BLUE_CIRCLE:";
-	    }
-	}
-	else if(sex){
-	    color = ":" + majorAspect.toString() + "_SQUARE:";
-	}
-	else{
-	    color = ":" + majorAspect.toString() + "_CIRCLE:";
-	}
-	luck = 70 - (strength + dexterity + constitution + intelligence + faith + charisma);
-	if(luck <= 0) luck = 1;
-	health = constitution/2;
-	mana = intelligence/2;
-	morale = faith/2;
-	inventorySize = constitution*3/4;
+		wounded = false;
+		poisoned = false;
+		dead = false;
+		this.name = name;
+		this.male = sex;
+		this.strength = str;
+		this.dexterity = dex;
+		this.constitution = con;
+		this.intelligence = intel;
+		this.faith = fai;
+		this.charisma = cha;
+		majorAspect = major;
+		minorAspect = minor;
+		if(minorAspect != Aspects.BROWN){
+			if(sex){
+			color = ":BLUE_SQUARE:";
+			}
+			else{
+			color = ":BLUE_CIRCLE:";
+			}
+		}
+		else if(sex){
+			color = ":" + majorAspect.toString() + "_SQUARE:";
+		}
+		else{
+			color = ":" + majorAspect.toString() + "_CIRCLE:";
+		}
+		luck = 70 - (strength + dexterity + constitution + intelligence + faith + charisma);
+		if(luck <= 0) luck = 1;
+		health = constitution/2;
+		mana = intelligence/2;
+		morale = faith/2;
+		inventorySize = constitution*3/4;
 
-	statExpMap.put("str", 0);
-	statExpMap.put("dex", 0);
-	statExpMap.put("con", 0);
-	statExpMap.put("int", 0);
-	statExpMap.put("fai", 0);
-	statExpMap.put("cha", 0);
+		statExpMap.put("str", 0);
+		statExpMap.put("dex", 0);
+		statExpMap.put("con", 0);
+		statExpMap.put("int", 0);
+		statExpMap.put("fai", 0);
+		statExpMap.put("cha", 0);
 
-	skillExpMap.put(Skills.SWORD, 0);
-	skillExpMap.put(Skills.AXE, 0);
-	skillExpMap.put(Skills.BOW, 0);
-	skillExpMap.put(Skills.MAGIC, 0);
-	skillExpMap.put(Skills.HEALING, 0);
-	skillExpMap.put(Skills.INSPIRE, 0);
-	skillExpMap.put(Skills.SHIELD, 0);
-	skillExpMap.put(Skills.MINING, 0);
-	skillExpMap.put(Skills.FARMING, 0);
-	skillExpMap.put(Skills.SMITHING, 0);
-	skillExpMap.put(Skills.SNEAKING, 0);
-	skillExpMap.put(Skills.FORAGING, 0);
-	skillExpMap.put(Skills.COOKING, 0);
-	skillExpMap.put(Skills.BUILDING, 0);
-	skillExpMap.put(Skills.ALCHEMY, 0);
-	skillExpMap.put(Skills.CRAFTING, 0);
-	skillExpMap.put(Skills.PRAYING, 0);
-	skillExpMap.put(Skills.SPEECH, 0);
-	skillExpMap.put(Skills.PLANNING, 0);
+		skillExpMap.put(Skills.SWORD, 0);
+		skillExpMap.put(Skills.AXE, 0);
+		skillExpMap.put(Skills.BOW, 0);
+		skillExpMap.put(Skills.MAGIC, 0);
+		skillExpMap.put(Skills.HEALING, 0);
+		skillExpMap.put(Skills.INSPIRE, 0);
+		skillExpMap.put(Skills.SHIELD, 0);
+		skillExpMap.put(Skills.MINING, 0);
+		skillExpMap.put(Skills.FARMING, 0);
+		skillExpMap.put(Skills.SMITHING, 0);
+		skillExpMap.put(Skills.SNEAKING, 0);
+		skillExpMap.put(Skills.FORAGING, 0);
+		skillExpMap.put(Skills.COOKING, 0);
+		skillExpMap.put(Skills.BUILDING, 0);
+		skillExpMap.put(Skills.ALCHEMY, 0);
+		skillExpMap.put(Skills.CRAFTING, 0);
+		skillExpMap.put(Skills.PRAYING, 0);
+		skillExpMap.put(Skills.SPEECH, 0);
+		skillExpMap.put(Skills.PLANNING, 0);
 }
 public void setParents(Kobold mom, Kobold dad){
 	mother = mom;

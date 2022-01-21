@@ -112,11 +112,11 @@ public class KoboldMaker
 
 	switch (rng.nextInt(4)){
 	    case 1:
-		aspects = new Aspects[]{dad.getMajorAspect(), mom.getMinorAspect()};
+		aspects = new Aspects[]{dad.getMajorAspect(), Aspects.BROWN};
 			randomAspect(aspects);
 			break;
 	    case 2:
-		aspects = new Aspects[]{mom.getMajorAspect(), dad.getMinorAspect()};
+		aspects = new Aspects[]{mom.getMajorAspect(), Aspects.BROWN};
 			randomAspect(aspects);
 			break;
 	    case 3:
