@@ -1,7 +1,7 @@
 public enum Items
 {
     //COMBAT
-    SWORD, AXE, BOW, STAFF, TOME, FLAG, KNIFE, CLUB,
+    SWORD, AXE, BOW, STAFF, TOME, BANNER, KNIFE, CLUB,
 
     //TOOLS                 V NOT IMPLEMENTED YET
     HAMMER, PICKAXE, HOE, BACKPACK,

@@ -19,7 +19,7 @@ public class Equipment {
             put(Skills.AXE, Items.AXE);
             put(Skills.MAGIC, Items.STAFF);
             put(Skills.HEALING, Items.TOME);
-            put(Skills.INSPIRE, Items.FLAG);
+            put(Skills.INSPIRE, Items.BANNER);
             put(Skills.BUILDING, Items.HAMMER);
             put(Skills.SMITHING, Items.HAMMER);
             put(Skills.CRAFTING, Items.HAMMER);
@@ -31,7 +31,7 @@ public class Equipment {
             put(Skills.COOKING, Items.KNIFE);
             put(Skills.PRAYING, Items.TOME);
             put(Skills.ALCHEMY, Items.TOME);
-            put(Skills.SPEECH, Items.FLAG);
+            put(Skills.SPEECH, Items.BANNER);
             put(Skills.PLANNING, Items.TOME);
         }
     };

@@ -8,7 +8,7 @@ import java.util.Random;
 public class EquipmentCrafter
 {
     private Random rng = new Random();
-    private ItemIndex itemIndex = new ItemIndex();
+    public ItemIndex itemIndex = new ItemIndex();
 
     private int calcQuality(Kobold crafter, int skillLVL, Equipment tool, boolean complex){
         int quality = skillLVL * 2;
@@ -20,7 +20,7 @@ public class EquipmentCrafter
             quality += tool.rollEfficiency(crafter.getSkillMap(), crafter.getStat('l'));
         }
         //if(craftingStation != null){
-            //quality += craftingStation.rollEff()              IMPLEMENT AFTER MAKING BUILDINGS A THING :EYES:
+            //quality += craftingStation.rollEff()       IMPLEMENT AFTER MAKING BUILDINGS A THING :EYES:
         //}
         //                  ADD BASED ON CRAFTERS MOOD IF "CONFIDENT"/"CALM"/"PROUD" quality += 0->20
         //quality += 10; //TEMP!!!! REMOVE THIS ONCE MOOD AFFECTS QUALITY

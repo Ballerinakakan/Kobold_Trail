@@ -42,6 +42,7 @@ public class GeneralTesting
 	//raxis.pickUp(Resources.IRON_INGOT, 1);
 
 
+		/*
 	Equipment testAxe1 = crafter.craftEquipment(Items.AXE, Resources.BONE, raxis, null);
 	Equipment testHammer = crafter.craftEquipment(Items.HAMMER, Resources.WOOD, raxis, null);
 	raxis.equip(testHammer);
@@ -49,7 +50,7 @@ public class GeneralTesting
 	Equipment testAxe3 = crafter.craftEquipment(Items.AXE, Resources.BONE, raxis, null);
 	Equipment testAxe4 = crafter.craftEquipment(Items.AXE, Resources.BONE, raxis, null);
 	//System.out.print("\naxe1: " + testAxe1.toString() + "\naxe2: " + testAxe2.toString() + "\naxe3: " + testAxe3.toString() + "\naxe4: " + testAxe4);
-
+	*/
 
 
 

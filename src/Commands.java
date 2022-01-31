@@ -75,7 +75,7 @@ public class Commands extends ListenerAdapter {
                         } else{
                             Resources res = toResource(args[1]);
                             Items item = toItem(args[2]);
-                            if (kob.canCraft(res, item)){
+                            if (crafter.itemIndex.canCraft(item, res, kob)){
                                 crafter.craftEquipment(item, res, kob);
                             }
 
