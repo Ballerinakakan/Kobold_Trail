@@ -1,4 +1,4 @@
-public class Stockpile extends Building
+public class Stockpile
 {
     Stockpile(){
 

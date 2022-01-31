@@ -10,7 +10,7 @@ public class EquipmentCrafter
     private Random rng = new Random();
     private ItemIndex itemIndex = new ItemIndex();
 
-    private int calcQuality(Kobold crafter, int skillLVL, Equipment tool, Building craftingStation, boolean complex){
+    private int calcQuality(Kobold crafter, int skillLVL, Equipment tool, boolean complex){
         int quality = skillLVL * 2;
         if(complex) {
              quality += crafter.getStat('i');
@@ -19,9 +19,9 @@ public class EquipmentCrafter
         if(tool != null && tool.getType() == Items.HAMMER){
             quality += tool.rollEfficiency(crafter.getSkillMap(), crafter.getStat('l'));
         }
-        if(craftingStation != null){
+        //if(craftingStation != null){
             //quality += craftingStation.rollEff()              IMPLEMENT AFTER MAKING BUILDINGS A THING :EYES:
-        }
+        //}
         //                  ADD BASED ON CRAFTERS MOOD IF "CONFIDENT"/"CALM"/"PROUD" quality += 0->20
         //quality += 10; //TEMP!!!! REMOVE THIS ONCE MOOD AFFECTS QUALITY
 
@@ -63,8 +63,8 @@ public class EquipmentCrafter
         return res;
     }
 
-    public Equipment craftEquipment(Items type, Resources material, Kobold crafter, Building craftingStation){ //FIX THIS
-	int quality = calcQuality(crafter, crafter.getSkillLVL(Skills.CRAFTING), checkEquip(crafter), craftingStation, false);
+    public Equipment craftEquipment(Items type, Resources material, Kobold crafter){ //FIX THIS
+	int quality = calcQuality(crafter, crafter.getSkillLVL(Skills.CRAFTING), checkEquip(crafter), false);
         Statblock block = itemIndex.getStatblock(material, type);
         int durability = calcDurability(quality, block);
         //                                                  Calc damage and eff based on quality?

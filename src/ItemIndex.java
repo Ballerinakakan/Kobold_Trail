@@ -1,14 +1,20 @@
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class ItemIndex
 {
 
+    private static final HashMap<Items, Statblock> testItemIndex = new HashMap<Items, Statblock>();
     private static final HashMap<Items, Statblock> woodItemIndex = new HashMap<Items, Statblock>();
     private static final HashMap<Items, Statblock> boneItemIndex = new HashMap<Items, Statblock>();
-    private static final HashMap<Items, Statblock> testItemIndex = new HashMap<Items, Statblock>();
+
+    //Make a map of all recipes!!!!
+
+
 
     private static final HashMap<Resources, HashMap<Items, Statblock>> matItemIndex = new HashMap<Resources, HashMap<Items, Statblock>>();
+    private static final HashMap<Resources, HashMap<Items, Set<RecipeReq>>> matItemRecipeIndex = new HashMap<Resources, HashMap<Items, Set<RecipeReq>>>();
 
     static {
         woodItemIndex.put(Items.HOE, new Statblock(10, 95, 5, null, new int[] {1, 6, 0}, DamageType.TOOL));
@@ -42,6 +48,10 @@ public class ItemIndex
         matItemIndex.put(Resources.MUSHROOM, testItemIndex);
         matItemIndex.put(Resources.BONE, boneItemIndex);
         matItemIndex.put(Resources.WOOD, woodItemIndex);
+
+        //CRAFTING RECIPES
+
+
     }
 
     public Statblock getStatblock(Resources mat, Items item){

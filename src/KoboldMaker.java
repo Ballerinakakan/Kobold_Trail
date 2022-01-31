@@ -91,6 +91,11 @@ public class KoboldMaker
 		}
 	}
 
+	public Kobold spawnRandKobold(){
+		return new Kobold("Default", 10, 10, 10, 10, 10, 10, true, Aspects.BROWN, Aspects.BROWN);
+	}
+
+
     public Kobold spawnKobold(Kobold dad, Kobold mom){
 	str = (dad.getStat('s') + mom.getStat('s')) / 2 + (rng.nextInt(7) - 3);
 	dex = (dad.getStat('d') + mom.getStat('d')) / 2 + (rng.nextInt(7) - 3);

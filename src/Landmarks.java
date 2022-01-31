@@ -1,0 +1,3 @@
+public enum Landmarks {
+    EMPTY, CRADLE_TOWN, TOWN, WIZARDS_TOWER //ADD MORE FOR BASE GAME AND MORE FOR EXPANSION 1 (dungeons?)
+}

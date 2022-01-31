@@ -1,18 +1,21 @@
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import net.dv8tion.jda.api.EmbedBuilder;
+
+import java.io.Serializable;
+import java.util.*;
 
 
 public class Kobold extends Creature {
     private Kobold mother, father;
-    private int ageMonth=0, ageYear=0, inventorySize, luck=1, breedingCooldown = 7;
+    private int ageMonth=0, ageYear=0, inventorySize, luck=1, breedingCooldown = 7, ap = 10;
     private double joy=0, power=0, peace=0, hunger=0, oldAgeRisk;
     private Random rng = new Random();
-    private String color;
-    private boolean male, fertile=false;
+    private String color, tribe = "Tribeless", playerName = "noname";
+    private boolean male, fertile=false, inTown = true;
     private Map<Skills, Integer> skillMap = new HashMap<>();
     private Map<Skills, Integer> skillExpMap = new HashMap<>();
     private Map<String, Integer> statExpMap = new HashMap<>();
+	//private Set<Techs> familiarities = new HashSet<>();
+	//private Map<Techs, Integer> famExpMap = new HashMap<>(); Maybe add familiarity?
     private Map<Resources, Integer> inventory = new HashMap<>();
     {
 	equippedItems.put("RHand", null);
@@ -245,13 +248,20 @@ public class Kobold extends Creature {
 	return true;
     }
 
+	public Map<Resources, Integer> getInventory(){
+		return inventory;
+	}
+
     public  HashMap getSkillMap(){
 	return (HashMap) skillMap;
     }
 
     public String getName(){
-	return name;
-    }
+		if(playerName.equalsIgnoreCase("noname")){
+			return birthName;
+		}else return playerName;
+	}
+	public void setPlayerName(String name){playerName = name;}
     public boolean getSex(){return male;}
     public boolean getDead(){return dead;}
     public boolean getFertile(){return fertile;}
@@ -264,7 +274,7 @@ public class Kobold extends Creature {
     }
 
     @Override public String toString() {
-	return "\n ---------------" + name + "---------------\n color: " + color + "\n Aspecs: "+ majorAspect.toString() + " " + minorAspect + "\n age: " + ageYear + " years and " + ageMonth + " months \n str: " + strength + "\n dex: " + dexterity + "\n con: " +
+	return "\n ---------------" + birthName + "---------------\n color: " + color + "\n Aspecs: "+ majorAspect.toString() + " " + minorAspect + "\n age: " + ageYear + " years and " + ageMonth + " months \n str: " + strength + "\n dex: " + dexterity + "\n con: " +
 	       constitution + "\n int: " + intelligence + "\n fai: " + faith + "\n cha: " + charisma + "\n Luck: " + luck + "\n health=" +
 	       health + ", morale=" + morale + ", mana=" + mana + "\n inventorySize=" + inventorySize +
 	        "\n joy=" + joy + ", power=" + power + ", peace=" + peace + ", hunger=" + hunger +
@@ -272,11 +282,55 @@ public class Kobold extends Creature {
 	       ", skillMap=" + skillMap + "\n -----------------------------------";
     }
 
+	public boolean isInTown(){
+		return inTown;
+	}
+
+	public void enterTown(){
+		inTown = true;
+	}
+	public void leaveTown(){
+		inTown = false;
+	}
+
+	private String genderToString(){
+		if(male) return "male";
+		else return "female";
+	}
+
+	public EmbedBuilder toEmbed(){
+		EmbedBuilder embed = new EmbedBuilder();
+		embed.clear();
+		if(birthName.equalsIgnoreCase("noname")){embed.setTitle(color.toLowerCase() + birthName);
+		} else {
+			embed.setTitle(color.toLowerCase() + getName());
+		}
+		embed.appendDescription("Birth name: " + birthName + "\nTribe: " + tribe + "\nage:\n\tyears: " + ageYear + "\n\tmonths: " +
+				ageMonth + "\nGender: " + genderToString() + "\n Color: " + color.toLowerCase() + "\nParents: "
+		+ mother + ", " + father + "\n\nStatus: " + getStatus() + "\n\nHP: " + health + "/" +
+		constitution/2 + "\nAP: " + ap + "/10\nMana: " + mana + "/" + intelligence/2 +
+		"\n\nInventory (" + inventory.size() + "/" + inventorySize + ")\n" + inventory.toString() +
+		"\nStats:\nstr: " + strength + " / dex: " + dexterity + " / con: " + constitution +
+		" / int: " + intelligence + " / fai: " + faith + " / cha: " + charisma + "\n\n" +
+		"Skills: \n");
+		for (Map.Entry skill: skillMap.entrySet()) {
+			embed.appendDescription(skill.getKey().toString().toLowerCase() + ": " + skill.getValue() + "\n");
+		}
+		//embed.build();
+		return embed;
+	}
+
+	public String atLocation(){
+		String res;
+		res = color.toLowerCase() + getName();
+		return res;
+	}
+
     public Kobold(String name, int str, int dex, int con, int intel, int fai, int cha, boolean sex, Aspects major, Aspects minor){
 		wounded = false;
 		poisoned = false;
 		dead = false;
-		this.name = name;
+		this.birthName = name;
 		this.male = sex;
 		this.strength = str;
 		this.dexterity = dex;
@@ -286,6 +340,7 @@ public class Kobold extends Creature {
 		this.charisma = cha;
 		majorAspect = major;
 		minorAspect = minor;
+
 		if(minorAspect != Aspects.BROWN){
 			if(sex){
 			color = ":BLUE_SQUARE:";
@@ -295,7 +350,13 @@ public class Kobold extends Creature {
 			}
 		}
 		else if(sex){
-			color = ":" + majorAspect.toString() + "_SQUARE:";
+			if (majorAspect == Aspects.BLACK){
+				color = ":black_large_square:";
+			} else if (majorAspect == Aspects.WHITE){
+				color = ":white_large_square:";
+			}else {
+				color = ":" + majorAspect.toString() + "_SQUARE:";
+			}
 		}
 		else{
 			color = ":" + majorAspect.toString() + "_CIRCLE:";
@@ -337,7 +398,14 @@ public class Kobold extends Creature {
 public void setParents(Kobold mom, Kobold dad){
 	mother = mom;
 	father = dad;
+	tribe = father.tribe;
 }
+
+public String[] getStatus(){
+		String[] statuses = {"Hey", "Ho", "let's", "go!"};
+		return statuses;
+}
+
 //              Exp to reach lvl:   1    2    3    4    5    6    7    8    9   10
 private int[] expPerSkillLevel = {100, 125, 155, 195, 245, 305, 385, 475, 595, 745};
 

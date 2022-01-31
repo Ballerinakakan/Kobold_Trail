@@ -13,6 +13,11 @@ public class Magic
     }
 
     public void cast(Creature caster, Aspects major, Aspects minor, Object target, String... context ){
+        System.out.print("lmao fix this shit");
+    }
+
+    /*
+    public void cast(Creature caster, Aspects major, Aspects minor, Object target, String... context ){
         if(((minor == caster.minorAspect || minor == caster.majorAspect || minor == Aspects.BROWN) &&
                 (major == caster.majorAspect || major == caster.minorAspect)) || caster.getClass() != Kobold.class) {
             switch (major) {
@@ -165,6 +170,8 @@ public class Magic
         }else failiure();
     }
 
+
+     */
     private void castRR(Kobold target){
 
     }

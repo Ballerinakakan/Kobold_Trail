@@ -1,8 +1,5 @@
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
+import java.io.*;
+import java.util.*;
 
 public class GeneralTesting
 {
@@ -20,15 +17,19 @@ public class GeneralTesting
     private static Map<Integer, Kobold> koboldGraveyard = new HashMap<>();
     private static Map<Integer, Kobold> koboldEggs = new HashMap<>();
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
 	KoboldMaker koboldMaker = new KoboldMaker();
 	Random rng = new Random();
 	EquipmentCrafter crafter = new EquipmentCrafter();
-	Kobold raxis = new Kobold("Raxis", 10, 10, 10, 10, 10, 10, true, Aspects.YELLOW, Aspects.BROWN);
+	Kobold raxis = new Kobold("Raxis", 10, 10, 10, 10, 10, 10, true, Aspects.RED, Aspects.BROWN);
 	Kobold defaultKobold = new Kobold("Default", 10, 10, 10, 10, 10, 10, true, Aspects.BROWN, Aspects.BROWN);
 	int month = 1, year = 1;
 
 
+	//Attempt to save Raxis and load Raxis
+	serializeDataOut(raxis);
+	System.out.print("Raxis has been saved!");
+	System.out.print(serializeDataIn().toString());
 
 
 
@@ -40,6 +41,7 @@ public class GeneralTesting
 	//raxis.pickUp(Resources.STONE, 1);
 	//raxis.pickUp(Resources.IRON_INGOT, 1);
 
+
 	Equipment testAxe1 = crafter.craftEquipment(Items.AXE, Resources.BONE, raxis, null);
 	Equipment testHammer = crafter.craftEquipment(Items.HAMMER, Resources.WOOD, raxis, null);
 	raxis.equip(testHammer);
@@ -50,10 +52,11 @@ public class GeneralTesting
 
 
 
+
 	for (int k = 0; k < 10; k++) {
 		koboldMap.put(0, raxis);
 		koboldMap.put(1, new Kobold("Ringo", 12, 8, 12, 8, 12, 8, true, Aspects.RED, Aspects.BROWN));
-		koboldMap.put(2, new Kobold("Lulin", 12, 8, 12, 8, 12, 8, true, Aspects.GREEN, Aspects.BROWN));
+		koboldMap.put(2, new Kobold("Lulin", 12, 8, 12, 8, 12, 8, true, Aspects.YELLOW, Aspects.BROWN));
 		koboldMap.put(3, new Kobold("Joyli", 12, 8, 12, 8, 12, 8, true, Aspects.BLACK, Aspects.BROWN));
 		koboldMap.put(4, new Kobold("Dronald", 10, 10, 10, 10, 10, 10, true, Aspects.WHITE, Aspects.BROWN));
 		koboldMap.put(5, new Kobold("Zap", 10, 10, 10, 10, 10, 10, false, Aspects.YELLOW, Aspects.BROWN));
@@ -160,4 +163,21 @@ public class GeneralTesting
 	}
 
     }
+
+	static private void serializeDataOut(Object o) throws IOException {
+		String fileName = "test.txt";
+		FileOutputStream fos = new FileOutputStream(fileName);
+		ObjectOutputStream oos = new ObjectOutputStream(fos);
+		oos.writeObject(o);
+		oos.close();
+	}
+
+	public static Kobold serializeDataIn() throws IOException, ClassNotFoundException {
+		String fileName = "test.txt";
+		FileInputStream fis = new FileInputStream(fileName);
+		ObjectInputStream ois = new ObjectInputStream(fis);
+		Kobold kob = (Kobold) ois.readObject();
+		ois.close();
+		return kob;
+	}
 }

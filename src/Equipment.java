@@ -3,8 +3,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-public class Equipment
-{
+public class Equipment {
     private Resources matterial;
     private Items type;
     private int durability, quality, accuracy, range=1;
