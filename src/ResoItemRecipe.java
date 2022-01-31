@@ -36,7 +36,7 @@ public class ResoItemRecipe {
                 availableResources.put(e.getKey(), e.getValue() + availableResources.get(e.getKey()));
             }
         }
-        for (Map.Entry<Resources, Integer> e : kob.getInventory().entrySet()) {
+        for (Map.Entry<Resources, Integer> e : kob.getInventoryRes().entrySet()) {
             if (availableResources.containsKey(e.getKey())){
                 availableResources.put(e.getKey(), e.getValue() + availableResources.get(e.getKey()));
             }

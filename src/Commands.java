@@ -76,7 +76,13 @@ public class Commands extends ListenerAdapter {
                             Resources res = toResource(args[1]);
                             Items item = toItem(args[2]);
                             if (crafter.itemIndex.canCraft(item, res, kob)){
-                                crafter.craftEquipment(item, res, kob);
+                                Equipment eq = crafter.craftEquipment(item, res, kob);
+                                c.sendMessage(kob.getName() + " has crafted an " + eq.toString()).queue();
+                                if (!kob.pickUpItem(eq)){
+                                    c.sendMessage(kob.getName() + "s inventory was full, so " + eq.toString() +
+                                            " was dropped on the ground!").queue();
+                                    kob.inventoryOverflowE(eq);
+                                }
                             }
 
                         }

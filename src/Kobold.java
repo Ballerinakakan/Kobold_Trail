@@ -1,6 +1,5 @@
 import net.dv8tion.jda.api.EmbedBuilder;
 
-import java.io.Serializable;
 import java.util.*;
 
 
@@ -16,7 +15,8 @@ public class Kobold extends Creature {
     private Map<String, Integer> statExpMap = new HashMap<>();
 	//private Set<Techs> familiarities = new HashSet<>();
 	//private Map<Techs, Integer> famExpMap = new HashMap<>(); Maybe add familiarity?
-    private Map<Resources, Integer> inventory = new HashMap<>();
+    private Map<Resources, Integer> inventoryRes = new HashMap<>();
+    private Set<Equipment> inventoryEqu = new HashSet<>();
     {
 	equippedItems.put("RHand", null);
 	equippedItems.put("LHand", null);
@@ -104,31 +104,55 @@ public class Kobold extends Creature {
 	}
     }
 
+	public void inventoryOverflowE(Equipment eq){
+		if (inTown){
+			getLocation().getTown().dropE(eq);
+		}
+		else{
+			getLocation().dropE(eq);
+		}
+	}
+
     public boolean pickUp(Resources res, int amount){
-	int usedSpace=0;
-	for (Map.Entry<Resources, Integer> resource : inventory.entrySet()) {
-	    usedSpace += resource.getValue();
-	}
-	for (Map.Entry<String, Equipment> equipment : equippedItems.entrySet()) {
-	    if(equipment.getValue() != null){
-		usedSpace++;
-	    }
-	}
-	if (usedSpace + amount > inventorySize){
-	    return false;
-	}else{
-	    if(inventory.containsKey(res)){
-		int newVal = inventory.get(res);
-		newVal += amount;
-		inventory.replace(res, newVal);
-	    }else{
-		inventory.put(res, amount);
-	    }
-	    return true;
-	}
+		usedInventorySpace();
+		if (usedInventorySpace() + amount > inventorySize){
+			return false;
+		}else{
+			if(inventoryRes.containsKey(res)){
+				int newVal = inventoryRes.get(res);
+				newVal += amount;
+				inventoryRes.replace(res, newVal);
+			}else{
+				inventoryRes.put(res, amount);
+			}
+			return true;
+		}
     }
 
-    private void death(String reason){
+	public boolean pickUpItem(Equipment eq){
+		int usedSpace = usedInventorySpace();
+		if (usedSpace + eq.size() > inventorySize){
+			return false;
+		}else{
+			inventoryEqu.add(eq);
+			return true;
+		}
+	}
+
+	private int usedInventorySpace() {
+		int res = 0;
+		for (Map.Entry<Resources, Integer> resource : inventoryRes.entrySet()) {
+			res += resource.getValue();
+		}
+		for (Map.Entry<String, Equipment> equipment : equippedItems.entrySet()) {
+			if(equipment.getValue() != null){
+				res++;
+			}
+		}
+		return res;
+	}
+
+	private void death(String reason){
 	dead = true;
 	//System.out.print("\n" + name + " has tragically passed away from " + reason + " :<");
 	//print death :<
@@ -245,11 +269,11 @@ public class Kobold extends Creature {
     }
 
     private boolean isInventoryFull(){		//IMPLEMENT WITH INVBNTORY REWORK
-	return true;
-    }
+		return ((usedInventorySpace() + inventoryEqu.size()) == inventorySize);
+	}
 
-	public Map<Resources, Integer> getInventory(){
-		return inventory;
+	public Map<Resources, Integer> getInventoryRes(){
+		return inventoryRes;
 	}
 
     public  HashMap getSkillMap(){
@@ -309,7 +333,7 @@ public class Kobold extends Creature {
 				ageMonth + "\nGender: " + genderToString() + "\n Color: " + color.toLowerCase() + "\nParents: "
 		+ mother + ", " + father + "\n\nStatus: " + getStatus() + "\n\nHP: " + health + "/" +
 		constitution/2 + "\nAP: " + ap + "/10\nMana: " + mana + "/" + intelligence/2 +
-		"\n\nInventory (" + inventory.size() + "/" + inventorySize + ")\n" + inventory.toString() +
+		"\n\nInventory (" + inventoryRes.size() + "/" + inventorySize + ")\n" + inventoryRes.toString() +
 		"\nStats:\nstr: " + strength + " / dex: " + dexterity + " / con: " + constitution +
 		" / int: " + intelligence + " / fai: " + faith + " / cha: " + charisma + "\n\n" +
 		"Skills: \n");

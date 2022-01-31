@@ -1,6 +1,7 @@
 import net.dv8tion.jda.api.EmbedBuilder;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -13,6 +14,7 @@ public class Tile {
     private Set<CreatureType> availableCreatures;
     private Set<Resources> availableResources;
     private Map<Resources, Integer> groundResources = new HashMap<>();
+    private Set<Equipment> localEquipment = new HashSet<>();
 
     public EmbedBuilder toEmbed(){
         EmbedBuilder embed = new EmbedBuilder();
@@ -86,6 +88,10 @@ public class Tile {
 
     public Map<Resources, Integer> getGroundResources() {
         return groundResources;
+    }
+
+    public void dropE(Equipment eq){
+        localEquipment.add(eq);
     }
 
     public void moveKoboldHere(Kobold kob){

@@ -10,7 +10,7 @@ public class Town
     private Set<Building> buildings = new HashSet<>();
     private Set<Kobold> koboldsHere = new HashSet<>();
     private Map<Resources, Integer> townResources = new HashMap<>();
-    private Map<Items, Set<Equipment>> townEquipment = new HashMap<>();
+    private Set<Equipment> localEquipment = new HashSet<>();
     private Set<Techs> tech;
 
 
@@ -41,6 +41,10 @@ public class Town
 
     public void unlockTech(Techs re){
         tech.add(re);
+    }
+
+    public void dropE(Equipment eq){
+        localEquipment.add(eq);
     }
 
 }

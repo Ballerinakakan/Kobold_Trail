@@ -82,6 +82,7 @@ public class Equipment {
     public Items getType(){
         return type;
     }
+    public int size(){return 1;}
 
     public int rollEfficiency(HashMap<Skills, Integer> skillMap, int luck){
         int efficiency = 0;
