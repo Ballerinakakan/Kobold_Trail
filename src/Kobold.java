@@ -276,9 +276,25 @@ public class Kobold extends Creature {
 		return inventoryRes;
 	}
 
+	public void remInventoryRes(Resources res){
+		inventoryRes.remove(res);
+	}
+
     public  HashMap getSkillMap(){
 	return (HashMap) skillMap;
     }
+
+	public int getDefence(){
+		if (equippedItems.get("RHand") != null){
+			return equippedItems.get("RHand").getDefence();
+		}
+		else if (equippedItems.get("LHand") != null){
+			return equippedItems.get("LHand").getDefence();
+		}
+		else{
+			return skillMap.getOrDefault(Skills.UNARMED, 1);
+		}
+	}
 
     public String getName(){
 		if(playerName.equalsIgnoreCase("noname")){

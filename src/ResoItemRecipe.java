@@ -18,20 +18,20 @@ public class ResoItemRecipe {
 
         boolean tech = reqTechs.isEmpty(), res = false, build = reqBuildings.isEmpty();
         Map<Resources, Integer> availableResources = new HashMap<>();
-        if (kob.getLocation().hasTown() && kob.isInTown()){
-            Set<Techs> tTech = kob.getLocation().getTown().getTechs();
+        if (kob.getLocation().getClass() == Town.class){
+            Set<Techs> tTech = kob.getLocation().getTechs();
             Set<Techs> totTech = new HashSet<>();
             totTech.addAll(tTech);
             //totTech.addAll(kob.getFam()); //Uncomment this line to add familiarity to crafting
             if (totTech.containsAll(reqTechs)){
                 tech = true;
             }
-            if (kob.getLocation().getTown().getBuildings().containsAll(reqBuildings)){
+            if (kob.getLocation().getBuildings().containsAll(reqBuildings)){
                 build = true;
             }
-            availableResources.putAll(kob.getLocation().getTown().getTownResources());
+            availableResources.putAll(kob.getLocation().getLocalResources());
         }
-        for (Map.Entry<Resources, Integer> e : kob.getLocation().getGroundResources().entrySet()) {
+        for (Map.Entry<Resources, Integer> e : kob.getLocation().getLocalResources().entrySet()) {
             if (availableResources.containsKey(e.getKey())){
                 availableResources.put(e.getKey(), e.getValue() + availableResources.get(e.getKey()));
             }
@@ -49,6 +49,11 @@ public class ResoItemRecipe {
             else res = true;
         }
 
+        if (tech && res && build){
+            for (RecipeReq rr : reqRecipeSet) {
+                rr.removeRes(kob);
+            }
+        }
 
         return tech && res && build;
     }

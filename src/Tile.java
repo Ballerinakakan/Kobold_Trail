@@ -1,20 +1,15 @@
 import net.dv8tion.jda.api.EmbedBuilder;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
-public class Tile {
+public class Tile extends Location{
     private Biome biome;
     private Landmarks landmark;
     private Town localTown = null;
-    private Set<Kobold> koboldsHere;
+
     private Set<Creature> creaturesHere;
     private Set<CreatureType> availableCreatures;
     private Set<Resources> availableResources;
-    private Map<Resources, Integer> groundResources = new HashMap<>();
-    private Set<Equipment> localEquipment = new HashSet<>();
 
     public EmbedBuilder toEmbed(){
         EmbedBuilder embed = new EmbedBuilder();
@@ -56,46 +51,24 @@ public class Tile {
                 //AAAAHHHHHH MAKE NEW TOWN RANDOMLY!!!!
                 break;
             case CRADLE_TOWN:
-                localTown = new Town("Siul's Cradle", new Tribe("Siul's gift", Bot.siul));
+                localTown = new Town("Siul's Cradle", new Tribe("Siul's gift", Bot.siul), this);
         }
 
     }
 
-    public Boolean isKobHere(String name){
-        for (Kobold kob : koboldsHere) {
-            if (kob.getName().equalsIgnoreCase(name)){
-                return true;
-            }
-        }
-        return false;
-    }
+
 
     public Town getTown(){
         return localTown;
     }
+    @Override
     public boolean hasTown(){
         return localTown != null;
     }
 
-    public Kobold getKobHere(String name){
-        for (Kobold kob : koboldsHere) {
-            if (kob.getName().equalsIgnoreCase(name)){
-                return kob;
-            }
-        }
-        return null;
-    }
 
-    public Map<Resources, Integer> getGroundResources() {
-        return groundResources;
-    }
 
-    public void dropE(Equipment eq){
-        localEquipment.add(eq);
-    }
 
-    public void moveKoboldHere(Kobold kob){
-        koboldsHere.add(kob);
-    }
+
 
 }

@@ -100,5 +100,9 @@ public class Equipment {
         if(rng.nextInt(100) <= luck) efficiency += efficiency/2;
         return efficiency;
     }
+
+    public int getDefence(){
+        return baseDamage[1] + baseDamage[2];
+    }
 }
 

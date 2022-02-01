@@ -32,10 +32,19 @@ public class World {
         namelessKobolds.add( new Kobold("Amogus", 10, 10, 10, 10, 10, 10, false, Aspects.GREEN, Aspects.BROWN));
 
         for (Kobold kob : namelessKobolds) {
-            kob.setLocation(worldMap.get(cradle));
+            kob.setLocation(worldMap.get(cradle).getTown());
             worldMap.get(cradle).getTown().moveKoboldHere(kob);
-            worldMap.get(cradle).moveKoboldHere(kob);
+            //worldMap.get(cradle).moveKoboldHere(kob);
         }
+
+        //THIS IS FOR TESTING PURPOSES REMOVE ONCE DONE WITH TESTING!!!!!
+        for (Resources r : Resources.values()) {
+            worldMap.get(cradle).getTown().dropR(r, 20);
+        }
+        worldMap.get(cradle).getTown().unlockTech(Techs.BASIC_TOOLS);
+        worldMap.get(cradle).getTown().unlockTech(Techs.ADVANCED_TOOLS);
+
+        //END OF TESTING-----------------------------------------------------
 
     }
 

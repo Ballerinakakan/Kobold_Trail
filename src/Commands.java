@@ -58,15 +58,39 @@ public class Commands extends ListenerAdapter {
 
                     if (args[0].equalsIgnoreCase(prefix + "test")) {
                         c.sendMessage("*kobold noises*").queue();
-                    } else if (args[0].equalsIgnoreCase(prefix + "look")) {
+                    }
+                    //---------------------------------LOOK---------------------------------------
+                    else if (args[0].equalsIgnoreCase(prefix + "look")) {
                         if (args.length == 1) {
-                            Tile local = gwm.get(event.getGuild()).getKob(event.getMember()).getLocation();
-                            c.sendMessageEmbeds(local.toEmbed().build()).queue();
-                        } else if (kob.getLocation().isKobHere(args[1])) {
-                            Kobold victim = kob.getLocation().getKobHere(args[1]);
-                            c.sendMessageEmbeds(victim.toEmbed().build()).queue();
+                            if (kob.isInTown()){
+                                c.sendMessageEmbeds(kob.getLocation().toEmbed().build()).queue();
+                            }else{
+                                Location local = gwm.get(event.getGuild()).getKob(event.getMember()).getLocation();
+                                c.sendMessageEmbeds(local.toEmbed().build()).queue();
+                            }
+                        } else {
+                            if (args[1].equalsIgnoreCase("self")){
+                                c.sendMessageEmbeds(kob.toEmbed().build()).queue();
+                            }
+                            else if (args[1].equalsIgnoreCase("items")){
+                                if (kob.isInTown()){
+                                    c.sendMessageEmbeds(kob.getLocation().stockpileEmbed().build()).queue();
+                                }
+                                else{
+                                    c.sendMessageEmbeds(kob.getLocation().stockpileEmbed().build()).queue();
+                                }
+                            }
+                            else if (kob.getLocation().isKobHere(args[1])) {
+                                Kobold victim = kob.getLocation().getKobHere(args[1]);
+                                c.sendMessageEmbeds(victim.toEmbed().build()).queue();
+                            }
+                            else{
+                                c.sendMessage("No kobold named " + args[1] + "was found here, check for typos!").queue();
+                            }
                         }
-                    } else if (args[0].equalsIgnoreCase(prefix + "craft")) {
+                    }
+                    //----------------------------------CRAFT------------------------------------
+                    else if (args[0].equalsIgnoreCase(prefix + "craft")) {
                         if (args.length != 3){
                             c.sendMessage("You gotta pick something to craft!").queue();
                             embed.setTitle("!craft (command)");
@@ -84,21 +108,50 @@ public class Commands extends ListenerAdapter {
                                     kob.inventoryOverflowE(eq);
                                 }
                             }
+                            else{
+                                c.sendMessage("You can't craft that right now").queue();
+                            }
 
                         }
                         crafter.craftEquipment(Items.AXE, Resources.BONE, kob);
 
-                    } else if (args[0].equalsIgnoreCase(prefix + "backflip")){
+                    }
+                    //----------------------------------ENTER-----------------------------------    ADD CHANEL MOVING
+                    else if (args[0].equalsIgnoreCase(prefix + "enter")){
+                        if (!kob.isInTown() && kob.getLocation().hasTown()){
+                            kob.getLocation().koboldLeaving(kob);
+                            kob.getLocation().getTown().moveKoboldHere(kob);
+                            c.sendMessage(kob.getName() + " has entered the town " + kob.getLocation().getTown().name).queue();
+                            kob.setLocation(kob.getLocation().getTown());
+                            kob.enterTown();
+                        }
+                        else c.sendMessage("There is no town to enter here!").queue();
+                    }
+                    //----------------------------------LEAVE-----------------------------------    ADD CHANEL MOVING
+                    else if (args[0].equalsIgnoreCase(prefix + "leave")){
+                        if (kob.isInTown() && kob.getLocation().getClass() == Town.class){
+                            kob.getLocation().koboldLeaving(kob);
+                            kob.getLocation().getTile().moveKoboldHere(kob);
+                            kob.setLocation(kob.getLocation().getTile());
+                            c.sendMessage(kob.getName() + " has left the town " + kob.getLocation().getTown().name).queue();
+                            kob.leaveTown();
+                        }
+                        else c.sendMessage("You're not in a town! Can't leave what you're not in you know?").queue();
+                    }
+                    //--------------------------------BACKFLIP----------------------------------
+                    else if (args[0].equalsIgnoreCase(prefix + "backflip")){
                         c.sendMessage(kob.getName() + " does a sick backflip!!!!!").queue();
                     }
 
 
 
-                } else if (args[0].equalsIgnoreCase(prefix + "join")) {
+                }
+                //----------------------------------JOIN------------------------------------
+                else if (args[0].equalsIgnoreCase(prefix + "join")) {
                     if (args.length >= 2) {
                         wrld.memJoin(event.getMember(), args[1]);
                         event.getMember().modifyNickname(args[1]).queue();
-                        c.sendMessage("@" + args[1] + " welcome to the world of kobolds!").queue();
+                        c.sendMessage(event.getMessageId() + " welcome to the world of kobolds!").queue();
                     }else c.sendMessage("You have to pick a name! add it after !join").queue();
 
                 }else{

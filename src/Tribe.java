@@ -13,4 +13,8 @@ public class Tribe {
         chief = founder;
         this.name = name;
     }
+
+    public String getName(){
+        return name;
+    }
 }
