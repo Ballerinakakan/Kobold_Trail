@@ -11,29 +11,22 @@ public class ResoItemRecipe {
     }
 
     public boolean reqFulfilled(Resources r, Kobold kob){
-        Set<RecipeReq> incRes = reqRecipeSet;
-        Set<Techs> reqTechRes = reqTechs;
+        Set<RecipeReq> incRes = new HashSet<>(reqRecipeSet);
+        Set<Techs> reqTechRes = new HashSet<>(reqTechs);
         incRes.addAll(getSpecRes(r));
         reqTechRes.addAll(getSpecTech(r));
 
-        boolean tech = reqTechs.isEmpty(), res = false, build = reqBuildings.isEmpty();
-        Map<Resources, Integer> availableResources = new HashMap<>();
+        boolean tech = reqTechRes.isEmpty(), res = false, build = reqBuildings.isEmpty();
+        Map<Resources, Integer> availableResources = new HashMap<>(addResToAvailable(kob.getInventoryRes(), kob.getLocation().getLocalResources()));
         if (kob.getLocation().getClass() == Town.class){
             Set<Techs> tTech = kob.getLocation().getTechs();
-            Set<Techs> totTech = new HashSet<>();
-            totTech.addAll(tTech);
-            //totTech.addAll(kob.getFam()); //Uncomment this line to add familiarity to crafting
-            if (totTech.containsAll(reqTechs)){
+            Set<Techs> totTech = new HashSet<>(tTech);
+            //totTech.addAll(kob.getFam()); //Uncomment this line to add familiarity to crafting FUCKING
+            if (totTech.containsAll(reqTechRes)){
                 tech = true;
             }
             if (kob.getLocation().getBuildings().containsAll(reqBuildings)){
                 build = true;
-            }
-            availableResources.putAll(kob.getLocation().getLocalResources());
-        }
-        for (Map.Entry<Resources, Integer> e : kob.getLocation().getLocalResources().entrySet()) {
-            if (availableResources.containsKey(e.getKey())){
-                availableResources.put(e.getKey(), e.getValue() + availableResources.get(e.getKey()));
             }
         }
         for (Map.Entry<Resources, Integer> e : kob.getInventoryRes().entrySet()) {
@@ -41,7 +34,7 @@ public class ResoItemRecipe {
                 availableResources.put(e.getKey(), e.getValue() + availableResources.get(e.getKey()));
             }
         }
-        for (RecipeReq rr : reqRecipeSet) {
+        for (RecipeReq rr : incRes) {
             if (!rr.canAfford(availableResources)) {
                 res = false;
                 break;
@@ -50,12 +43,25 @@ public class ResoItemRecipe {
         }
 
         if (tech && res && build){
-            for (RecipeReq rr : reqRecipeSet) {
+            for (RecipeReq rr : incRes) {
                 rr.removeRes(kob);
             }
         }
 
         return tech && res && build;
+    }
+
+    private Map<Resources, Integer> addResToAvailable(Map<Resources, Integer> inv, Map<Resources, Integer> loc){
+        Map<Resources, Integer> res = new HashMap<>(inv);
+        for (Map.Entry<Resources, Integer> e : loc.entrySet()) {
+            if (res.containsKey(e.getKey())){
+                res.put(e.getKey(), res.get(e.getKey()) + e.getValue());
+            }
+            else{
+                res.put(e.getKey(), e.getValue());
+            }
+        }
+        return res;
     }
 
     private Set<RecipeReq> getSpecRes(Resources r){

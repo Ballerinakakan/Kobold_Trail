@@ -64,6 +64,7 @@ public class EquipmentCrafter
     }
 
     public Equipment craftEquipment(Items type, Resources material, Kobold crafter){ //FIX THIS
+
 	int quality = calcQuality(crafter, crafter.getSkillLVL(Skills.CRAFTING), checkEquip(crafter), false);
         Statblock block = itemIndex.getStatblock(material, type);
         int durability = calcDurability(quality, block);

@@ -39,7 +39,7 @@ public class World {
 
         //THIS IS FOR TESTING PURPOSES REMOVE ONCE DONE WITH TESTING!!!!!
         for (Resources r : Resources.values()) {
-            worldMap.get(cradle).getTown().dropR(r, 20);
+            worldMap.get(cradle).getTown().dropR(r, 2);
         }
         worldMap.get(cradle).getTown().unlockTech(Techs.BASIC_TOOLS);
         worldMap.get(cradle).getTown().unlockTech(Techs.ADVANCED_TOOLS);
